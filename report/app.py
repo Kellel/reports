@@ -59,7 +59,6 @@ class Application(object):
 
     @property
     def Session(self):
-        print "RETREIVEING SESSION configured: " + str(self._done_config)
         return self._session
 
     @property
@@ -68,9 +67,6 @@ class Application(object):
 
     @property
     def listen_key(self):
-        if not self._done_config:
-            self.setup()
-
         if hasattr(self.config, 'REDIS_LISTEN_KEY'):
             return self.config.REDIS_LISTEN_KEY
 
