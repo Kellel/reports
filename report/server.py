@@ -2,23 +2,20 @@
 import json
 import argparse
 
-from redis import StrictRedis
-
 from parser import parser, ParseError
 from app import log, application
-
-redis = StrictRedis()
 
 class ReportParserServer(object):
     def __init__(self, listen_key):
         self._threads = []
         self._subscribed = False
         self.listen_key = listen_key
+        self.redis = application.redis
     def serve_forever(self):
         log.critical("SERVER STARTED listening on: %s", self.listen_key)
         try:
             while True:
-                key, item = redis.brpop(self.listen_key)
+                key, item = self.redis.brpop(self.listen_key)
                 if key != self.listen_key:
                     print key
                     break

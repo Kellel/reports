@@ -5,13 +5,16 @@ import imp
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
+from redis import StrictRedis
+from wrapper import ConfigurableWrapper
+
 class Application(object):
     def __init__(self):
         self._done_config = False
         self._engine = None
         self._log = logging.getLogger('report-tool')
-        self._session = sessionmaker()
-
+        self._session = ConfigurableWrapper(sessionmaker)
+        self._redis = ConfigurableWrapper(StrictRedis)
 
     def setup(self, config_path=None):
 
@@ -44,12 +47,13 @@ class Application(object):
         self._log.addHandler(ch)
 
         if hasattr(self.config, 'SQLALCHEMY_URI'):
-            self._engine = create_engine(self.config.SQLALCHEMY_URI, echo=True)
+            self._engine = create_engine(self.config.SQLALCHEMY_URI, echo=self.config.DB_LOGGING)
         else:
-            self._engine = create_engine('sqlite:///test.db', echo=True)
+            self._engine = create_engine('sqlite:///test.db', echo=self.config.DB_LOGGING)
 
-        self._session.configure(bind=self.engine)
-        self.log.info("CREATING DB TABLES")
+        self._session.setup(self.engine)
+
+        self._redis.setup(host=self.config.REDIS_HOST, port=self.config.REDIS_PORT, password=self.config.REDIS_PASSWORD)
 
         self._done_config = True
 
@@ -64,6 +68,10 @@ class Application(object):
     @property
     def log(self):
         return self._log
+
+    @property
+    def redis(self):
+        return self._redis
 
     @property
     def listen_key(self):
