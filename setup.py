@@ -8,8 +8,10 @@ install_reqs = parse_requirements('requirements.txt')
 # e.g. ['django==1.5.1', 'mezzanine==1.4.6']
 reqs = [str(ir.req) for ir in install_reqs]
 
+from report import __version__
+
 setup(name='reports',
-      version='1.0',
+      version=__version__,
       description='Generate reports from txt files',
       author="Kellen Fox",
       author_email='kellen@cablespeed.com',
