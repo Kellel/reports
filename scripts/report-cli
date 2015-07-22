@@ -1,0 +1,39 @@
+#!/usr/bin/env python
+import os
+import sys
+import json
+import argparse
+
+from redis import StrictRedis
+
+redis = StrictRedis()
+
+def client(user, filename, listen_key):
+    filename = os.path.abspath(filename)
+    if os.path.isfile(filename):
+        print "Sending File"
+        msg = {
+            'filename': filename,
+            'user': user
+        }
+        redis.lpush(listen_key, json.dumps(msg))
+
+    elif os.path.isdir(filename):
+        print "Sending Directory"
+        for root,directories, filenames in os.walk(filename):
+            for file in filenames:
+                msg = {
+                    'filename': os.path.join(root,file),
+                    'user': user
+                }
+                redis.lpush(listen_key, json.dumps(msg))
+    else:
+        print "No such file or directory"
+
+parser = argparse.ArgumentParser(description="cli for sending jobs to the report parser from the command line")
+parser.add_argument('user', help="the username or id to store with the report")
+parser.add_argument('filename', help="the file or directory to send to the report daemon")
+
+args = parser.parse_args()
+
+client(args.user, args.filename, 'report-listen-queue')

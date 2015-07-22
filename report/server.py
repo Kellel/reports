@@ -4,7 +4,7 @@ import argparse
 
 from redis import StrictRedis
 
-from parser import parser
+from parser import parser, ParseError
 from app import log, application
 
 redis = StrictRedis()
@@ -27,12 +27,24 @@ class ReportParserServer(object):
             pass
 
     def work(self, item):
-        print "ITEM: " + str(item)
-        message = json.loads(item)
+        try:
+            message = json.loads(item)
+        except ValueError:
+            log.exception("Message parsing failed")
+            return
+
         filename = message.get("filename")
         user = message.get("user")
         log.info("STARTING JOB FOR {}: {}".format(user, filename))
-        parser.parse(filename, user)
+
+        try:
+            parser.parse(filename, user)
+        except ParseError:
+            log.exception("Parsing Error")
+        except IOError:
+            log.exception("Error opening file")
+        except:
+            log.exception("An unknown error has occured")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run the report parser daemon")

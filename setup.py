@@ -17,5 +17,6 @@ setup(name='reports',
       author_email='kellen@cablespeed.com',
       packages=['report'],
       install_requires=reqs,
-      scripts=['scripts/report-daemon']
+      scripts=['scripts/report-daemon',
+               'scripts/report-cli']
 )

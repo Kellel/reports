@@ -4,7 +4,7 @@ import os
 
 from models import Report, AutoKeywordReportItem, KeywordBidReportItem, CampaignPerformanceReportItem, DailySkuPerformanceReportItem
 
-from app import log, Session
+from app import log, application
 
 class ParseError(Exception):
     """
@@ -42,11 +42,17 @@ class BasicParser(object):
     LINE_REGEX = "^.*$"
 
     def __init__(self):
-        self.session = Session()
         log.debug("COMPILING %s", self.FIRST_REGEX)
         self._first_regex = re.compile(self.FIRST_REGEX)
         log.debug("COMPILING %s", self.LINE_REGEX)
         self._line_regex = re.compile(self.LINE_REGEX)
+        self._session = None
+
+    @property
+    def session(self):
+        if not self._session:
+            self._session = application.Session()
+        return self._session
 
     def cleanup(self):
         self.session.close()

@@ -48,7 +48,7 @@ class Application(object):
         else:
             self._engine = create_engine('sqlite:///test.db', echo=True)
 
-        self._session = self._session.configure(bind=self.engine)
+        self._session.configure(bind=self.engine)
         self.log.info("CREATING DB TABLES")
 
         self._done_config = True
@@ -59,6 +59,7 @@ class Application(object):
 
     @property
     def Session(self):
+        print "RETREIVEING SESSION configured: " + str(self._done_config)
         return self._session
 
     @property

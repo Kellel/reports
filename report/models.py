@@ -4,7 +4,7 @@ from sqlalchemy import create_engine, Column, Integer, String, DateTime, Foreign
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.sql import func
 
-from app import engine, Session, log
+from app import engine, log
 
 class Base(object):
     @declared_attr
