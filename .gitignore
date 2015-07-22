@@ -1,3 +1,6 @@
 *.db
 *.pyc
 tests/data/*
+build/
+dist/
+reports.egg-info/
