@@ -1,0 +1,13 @@
+#!/usr/bin/env python
+import argparse
+
+from report.server import ReportParserServer
+from report.app import application
+
+parser = argparse.ArgumentParser(description="Run the report parser daemon")
+parser.add_argument('-f', '--config', metavar='FILE', help="Provide a config file")
+args = parser.parse_args()
+application.setup(args.config)
+application.create_db()
+server = ReportParserServer(application.listen_key)
+server.serve_forever()
