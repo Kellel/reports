@@ -9,10 +9,16 @@ from redis import StrictRedis
 from wrapper import ConfigurableWrapper
 
 class Application(object):
+    """
+    Basic applicaton object.
+
+    This is where everything gets configured the setup method takes a configuration and builds all the connections
+    """
     def __init__(self):
         self._done_config = False
         self._engine = None
         self._log = logging.getLogger('report-tool')
+        self._engine = ConfigurableWrapper(create_engine)
         self._session = ConfigurableWrapper(sessionmaker)
         self._redis = ConfigurableWrapper(StrictRedis)
 
@@ -47,9 +53,9 @@ class Application(object):
         self._log.addHandler(ch)
 
         if hasattr(self.config, 'SQLALCHEMY_URI'):
-            self._engine = create_engine(self.config.SQLALCHEMY_URI, echo=self.config.DB_LOGGING)
+            self._engine.setup(self.config.SQLALCHEMY_URI, echo=self.config.DB_LOGGING)
         else:
-            self._engine = create_engine('sqlite:///test.db', echo=self.config.DB_LOGGING)
+            self._engine.setup('sqlite:///test.db', echo=self.config.DB_LOGGING)
 
         self._session.setup(self.engine)
 

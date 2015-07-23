@@ -15,7 +15,6 @@ class Base(object):
 
     def save(self, session):
         session.add(self)
-        session.commit()
         log.debug("SAVING OBJECT %s COMPLETE", self.id)
 
 
@@ -27,9 +26,9 @@ class Report(Base):
     user = Column(String)
     type = Column(String)
 
-class ReportTypes:
-    keyword_bid = "keyword_bid_report_item"
-    daily_sku_performance = "dailyskuperformance"
+    def save(self, session):
+        session.add(self)
+        session.commit()
 
 class KeywordBidReportItem(Base):
     report_id = Column(Integer, ForeignKey('report.id'))

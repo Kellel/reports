@@ -10,12 +10,12 @@ reqs = [str(ir.req) for ir in install_reqs]
 
 from report import __version__
 
-setup(name='reports',
+setup(name='report',
       version=__version__,
       description='Generate reports from txt files',
       author="Kellen Fox",
       author_email='kellen@cablespeed.com',
-      packages=['report'],
+      packages=['report', 'report.parsers'],
       install_requires=reqs,
       scripts=['scripts/report-daemon',
                'scripts/report-cli']

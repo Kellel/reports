@@ -1,3 +1,4 @@
+import inspect
 
 class ConfigurableWrapper(object):
     """
@@ -14,5 +15,6 @@ class ConfigurableWrapper(object):
 
     def setup(self, *args, **kwargs):
         instance = self._cls(*args, **kwargs)
-        self.__class__ = self._cls
+
+        self.__class__ = instance.__class__
         self.__dict__ = instance.__dict__
