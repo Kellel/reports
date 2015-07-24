@@ -79,30 +79,27 @@ class AutoKeywordReportParser(BasicParser):
         }
 
         self.insert_dict(dictionary)
-
-        print "INSERTED TO THINGY #########"
-
         return
 
-        item = AutoKeywordReportItem()
-        item.report_id = self.report.id
-        item.campaign_name = match.group(1)
-        item.ad_group_name = match.group(2)
-        item.ad_sku = match.group(3)
-        item.customer_search_term = match.group(4)
-        item.first_day_of_impression = match.group(5)
-        item.last_day_of_impression = match.group(6)
-        item.impressions = int(match.group(7))
-        item.clicks = int(match.group(8))
-        item.ctr = match.group(9)
-        item.total_spend = match.group(10)
-        item.average_cpc = match.group(11)
-        item.currency = match.group(12)
-        item.orders_placed_within_1_week_of_click = int(match.group(13))
-        item.product_sales_within_1_week_of_click = match.group(14)
-        item.conversion_sales_within_1_week_of_click = match.group(15)
-        item.same_sku_units_ordered_within_1_week_of_click = int(match.group(16))
-        item.other_sku_units_ordered_within_1_week_of_click = int(match.group(17))
-        item.same_sku_units_product_sales_within_1_week_of_click = match.group(18)
-        item.other_sku_units_product_sales_within_1_week_of_click = match.group(19)
-        item.save(self.session)
+        #item = AutoKeywordReportItem()
+        #item.report_id = self.report.id
+        #item.campaign_name = match.group(1)
+        #item.ad_group_name = match.group(2)
+        #item.ad_sku = match.group(3)
+        #item.customer_search_term = match.group(4)
+        #item.first_day_of_impression = match.group(5)
+        #item.last_day_of_impression = match.group(6)
+        #item.impressions = int(match.group(7))
+        #item.clicks = int(match.group(8))
+        #item.ctr = match.group(9)
+        #item.total_spend = match.group(10)
+        #item.average_cpc = match.group(11)
+        #item.currency = match.group(12)
+        #item.orders_placed_within_1_week_of_click = int(match.group(13))
+        #item.product_sales_within_1_week_of_click = match.group(14)
+        #item.conversion_sales_within_1_week_of_click = match.group(15)
+        #item.same_sku_units_ordered_within_1_week_of_click = int(match.group(16))
+        #item.other_sku_units_ordered_within_1_week_of_click = int(match.group(17))
+        #item.same_sku_units_product_sales_within_1_week_of_click = match.group(18)
+        #item.other_sku_units_product_sales_within_1_week_of_click = match.group(19)
+        #item.save(self.session)

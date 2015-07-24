@@ -4,6 +4,7 @@ from ..models import KeywordBidReportItem
 
 class KeywordBidReportParser(BasicParser):
     TYPE = "keyword-bid-report"
+    DB_CLS = KeywordBidReportItem
     FIRST_REGEX = REGEX.join([
         "Report Date",
         "Campaign Name",
@@ -40,13 +41,13 @@ class KeywordBidReportParser(BasicParser):
         }
         self.insert_dict(item)
         return
-        item = KeywordBidReportItem()
-        item.report_id = self.report.id
-        item.report_date = match.group(1)
-        item.campaign_name = match.group(2)
-        item.ad_group_name = match.group(3)
-        item.keyword = match.group(4)
-        item.currency = match.group(5)
-        item.maximum_cpc_bid = match.group(6)
-        item.ext_page_1_bid = match.group(7)
-        item.save(self.session)
+        #item = KeywordBidReportItem()
+        #item.report_id = self.report.id
+        #item.report_date = match.group(1)
+        #item.campaign_name = match.group(2)
+        #item.ad_group_name = match.group(3)
+        #item.keyword = match.group(4)
+        #item.currency = match.group(5)
+        #item.maximum_cpc_bid = match.group(6)
+        #item.ext_page_1_bid = match.group(7)
+        #item.save(self.session)

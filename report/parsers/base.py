@@ -48,29 +48,30 @@ class BasicParser(object):
         self.filename = fqn
         self.user = user
 
-
-        print "&##&#&#&# THIS TIS SD:LFKJ SD:LKFJ KLSDJFL :KJFL:K J##################"
-
-
         with open(fqn) as f:
-            for number, line in enumerate(f):
-                if number==0:
-                    try:
-                        self.process_first(line.strip())
-                    except ParseError:
-                        log.error("INVALID FILE HEADER IN: %s", fqn)
-                        if not catch_errors:
-                            raise
-                        break
-                else:
-                    try:
-                        log.debug("### BEGIN LINE ###")
-                        self.process_line(line.strip())
-                        log.debug("### END LINE ###")
-                    except ParseError:
-                        log.error("INVALID LINE: %s:%d", fqn, number)
-                        if not catch_errors:
-                            raise
+            try:
+                for number, line in enumerate(f):
+                    if number==0:
+                        try:
+                            self.process_first(line.strip())
+                        except ParseError:
+                            log.error("INVALID FILE HEADER IN: %s", fqn)
+                            if not catch_errors:
+                                raise
+                            break
+                    else:
+                        try:
+                            log.debug("### BEGIN LINE ###")
+                            self.process_line(line.strip())
+                            log.debug("### END LINE ###")
+                        except ParseError:
+                            log.error("INVALID LINE: %s:%d", fqn, number)
+                            if not catch_errors:
+                                raise
+            except:
+                self.flush()
+                self.cleanup()
+                raise
 
         self.flush()
         self.cleanup()

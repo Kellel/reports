@@ -21,7 +21,10 @@ class ReportParserServer(object):
                     break
                 self.work(item)
         except KeyboardInterrupt:
-            pass
+            log.info("Caught CTRL-C. Terminating")
+
+        except:
+            log.exception("An unknown error has occured")
 
     def work(self, item):
         try:
@@ -40,8 +43,6 @@ class ReportParserServer(object):
             log.exception("Parsing Error")
         except IOError:
             log.exception("Error opening file")
-        except:
-            log.exception("An unknown error has occured")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run the report parser daemon")

@@ -30,10 +30,28 @@ def client(user, filename, listen_key):
     else:
         print "No such file or directory"
 
+def status(listen_key):
+    items = redis.lrange(listen_key, 0, -1)
+    if len(items) == 0:
+        print "No pending jobs"
+    else:
+        for number, job in enumerate(items, start=1):
+            print "{}) {}".format(number, job)
+
+
 parser = argparse.ArgumentParser(description="cli for sending jobs to the report parser from the command line")
-parser.add_argument('user', help="the username or id to store with the report")
-parser.add_argument('filename', help="the file or directory to send to the report daemon")
+subparsers = parser.add_subparsers(help="sub-command help", dest="command")
+
+create_parser = subparsers.add_parser('create', help="Create a job")
+create_parser.add_argument('user', help="the username or id to store with the report")
+create_parser.add_argument('filename', help="the file or directory to send to the report daemon")
+
+status_parser = subparsers.add_parser('status', help="View the status the job queue")
 
 args = parser.parse_args()
 
-client(args.user, args.filename, 'report-listen-queue')
+if args.command == "status":
+    status('report-listen-queue')
+else:
+
+    client(args.user, args.filename, 'report-listen-queue')
