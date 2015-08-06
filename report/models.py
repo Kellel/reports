@@ -1,16 +1,14 @@
-from sqlalchemy.ext.declarative import declarative_base, declared_attr
+from sqlalchemy.ext.declarative import declarative_base
 
 from sqlalchemy import create_engine, Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.sql import func
 
-from app import engine, log
+from app import engine, log, Application
+
+app = Application()
 
 class Base(object):
-    @declared_attr
-    def __tablename__(cls):
-        return cls.__name__.lower()
-
     id = Column(Integer, primary_key=True)
 
     def save(self, session):
@@ -21,6 +19,7 @@ class Base(object):
 Base = declarative_base(cls=Base)
 
 class Report(Base):
+    __tablename__ = app.TableConfig.report_table_name
     filename = Column(String)
     import_date = Column(DateTime, server_default=func.now())
     user = Column(String)
@@ -31,7 +30,8 @@ class Report(Base):
         session.commit()
 
 class KeywordBidReportItem(Base):
-    report_id = Column(Integer, ForeignKey('report.id'))
+    __tablename__ = app.TableConfig.keyword_bid_report_table_name
+    report_id = Column(Integer, ForeignKey(Report.id))
     report_date = Column(String)
     campaign_name = Column(String)
     ad_group_name = Column(String)
@@ -41,7 +41,8 @@ class KeywordBidReportItem(Base):
     ext_page_1_bid = Column(String)
 
 class AutoKeywordReportItem(Base):
-    report_id = Column(Integer, ForeignKey('report.id'))
+    __tablename__ = app.TableConfig.auto_keyword_report_table_name
+    report_id = Column(Integer, ForeignKey(Report.id))
     campaign_name = Column(String)
     ad_group_name = Column(String)
     ad_sku = Column(String)
@@ -63,7 +64,8 @@ class AutoKeywordReportItem(Base):
     other_sku_units_product_sales_within_1_week_of_click = Column(String)
 
 class CampaignPerformanceReportItem(Base):
-    report_id = Column(Integer, ForeignKey('report.id'))
+    __tablename__ = app.TableConfig.campaign_performance_report_table_name
+    report_id = Column(Integer, ForeignKey(Report.id))
     campaign_name = Column(String)
     ad_group_name = Column(String)
     advertised_sku = Column(String)
@@ -99,7 +101,8 @@ class CampaignPerformanceReportItem(Base):
     month_other_sku_units_ordered_product_sales= Column(String)
 
 class DailySkuPerformanceReportItem(Base):
-    report_id = Column(Integer, ForeignKey('report.id'))
+    __tablename__ = app.TableConfig.daily_sku_performance_report_table_name
+    report_id = Column(Integer, ForeignKey(Report.id))
     start_date = Column(String)
     end_date = Column(String)
     merchant_name = Column(String)

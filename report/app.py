@@ -8,12 +8,30 @@ from sqlalchemy.orm import sessionmaker
 from redis import StrictRedis
 from wrapper import ConfigurableWrapper
 
+def singleton(cls):
+    instances = {}
+    def getinstance():
+        if cls not in instances:
+            instances[cls] = cls()
+        return instances[cls]
+    return getinstance
+
+class _TableConfig(object):
+    def __init__(self, config):
+        self.report_table_name = config.REPORT_TABLE_NAME
+        self.keyword_bid_report_table_name = config.KEYWORD_BID_REPORT_TABLE_NAME
+        self.auto_keyword_report_table_name = config.AUTO_KEYWORD_REPORT_TABLE_NAME
+        self.campaign_performance_report_table_name = config.CAMPAIGN_PERFORMANCE_REPORT_TABLE_NAME
+        self.daily_sku_performance_report_table_name = config.DAILY_SKU_PERFORMANCE_REPORT_TABLE_NAME
+
+@singleton
 class Application(object):
     """
     Basic applicaton object.
 
     This is where everything gets configured the setup method takes a configuration and builds all the connections
     """
+
     def __init__(self):
         self._done_config = False
         self._engine = None
@@ -21,6 +39,7 @@ class Application(object):
         self._engine = ConfigurableWrapper(create_engine)
         self._session = ConfigurableWrapper(sessionmaker)
         self._redis = ConfigurableWrapper(StrictRedis)
+        self._table_config = ConfigurableWrapper(_TableConfig)
 
     def setup(self, config_path=None):
 
@@ -61,6 +80,8 @@ class Application(object):
 
         self._redis.setup(host=self.config.REDIS_HOST, port=self.config.REDIS_PORT, password=self.config.REDIS_PASSWORD)
 
+        self._table_config.setup(self.config)
+
         self._done_config = True
 
     @property
@@ -80,6 +101,10 @@ class Application(object):
         return self._redis
 
     @property
+    def TableConfig(self):
+        return self._table_config
+
+    @property
     def listen_key(self):
         if hasattr(self.config, 'REDIS_LISTEN_KEY'):
             return self.config.REDIS_LISTEN_KEY
@@ -97,6 +122,7 @@ application = Application()
 Session = application.Session
 engine = application.engine
 log = application.log
+TableConfig = application.TableConfig
 
 
 ## create log
