@@ -4,6 +4,8 @@
 
 # Database uri for more information lookup sqlalchemy database uri
 SQLALCHEMY_URI="sqlite:///report.db"
+#SQLALCHEMY_URI="mysql://user:pass@hostname:port/dbname"
+#SQLALCHEMY_URI="postgresql+psycopg2://user:pass@hostname:port/dbname"
 
 # Change the log level of the daemon (debug, info, warning, error, critical)
 LOG_LEVEL="info"
